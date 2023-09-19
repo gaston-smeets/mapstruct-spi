@@ -1,6 +1,5 @@
 package nl.devgs.mapstruct.spi;
 
-import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.ap.spi.DefaultAccessorNamingStrategy;
 
 import javax.lang.model.element.ExecutableElement;
@@ -11,26 +10,26 @@ public class SnakeCamelCaseAccessorNamingStrategy extends DefaultAccessorNamingS
     @Override
     public boolean isGetterMethod(final ExecutableElement method) {
         final String methodName = method.getSimpleName().toString();
-        return StringUtils.startsWith(methodName, "get") && method.getReturnType().getKind() != TypeKind.VOID;
+        return methodName.startsWith("get") && method.getReturnType().getKind() != TypeKind.VOID;
     }
 
     @Override
     public boolean isSetterMethod(final ExecutableElement method) {
         final String methodName = method.getSimpleName().toString();
-        return StringUtils.startsWith(methodName, "set") && method.getReturnType().getKind() == TypeKind.VOID;
+        return methodName.startsWith( "set") && method.getReturnType().getKind() == TypeKind.VOID;
     }
 
     @Override
     public String getPropertyName(final ExecutableElement getterOrSetterMethod) {
         final String methodName = getterOrSetterMethod.getSimpleName().toString();
-        if (StringUtils.contains(methodName, "_")) {
+        if (methodName.contains("_")) {
             // snake case -> remove get and underscore
-            final String property = StringUtils.substring(methodName, 4);
-            return StringUtils.lowerCase(property);
+            final String property = methodName.substring(4);
+            return property.toLowerCase();
         } else {
             // camel case -> remove get
-            final String property = StringUtils.substring(methodName, 3);
-            return StringUtils.uncapitalize(property);
+            final String property = methodName.substring(3);
+            return Character.toLowerCase(property.charAt(0)) + property.substring(1);
         }
     }
 }
